@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brockn Code | Creative Development Team</title>
+    
+    <!-- External Dependencies -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --neon-cyan: #00f3ff;
+            --neon-purple: #bc13fe;
+            --neon-green: #0aff0a;
+            --dark-bg: #050505;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--dark-bg);
+            color: #ffffff;
+            overflow: hidden; /* Prevent scroll during loading */
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* Loading Screen Styles */
+        #preloader {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .loader-text-wrap {
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .loader-main-text {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            margin-bottom: 0.5rem;
+            opacity: 0;
+            transform: translateY(100%);
+        }
+
+        .loader-sub-text {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: #666;
+            opacity: 0;
+        }
+
+        .loader-bar-bg {
+            width: 200px;
+            height: 2px;
+            background: rgba(255,255,255,0.05);
+            margin-top: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loader-bar-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, var(--neon-cyan), var(--neon-purple));
+            box-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, var(--neon-cyan), var(--neon-purple));
+            border-radius: 4px;
+        }
+
+        /* Neon Glow Utilities */
+        .text-glow-cyan {
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.7), 0 0 20px rgba(0, 243, 255, 0.5);
+        }
+
+        .box-glow:hover {
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.3), inset 0 0 10px rgba(0, 243, 255, 0.1);
+        }
+
+        /* Glassmorphism */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .glass-card {
+            background: rgba(20, 20, 30, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+        }
+
+        /* Animated Background Grid */
+        .bg-grid {
+            background-size: 50px 50px;
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+        }
+
+        /* Modal & Filter Transitions */
+        .modal {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .perspective {
+            perspective: 1000px;
+        }
+
+        .project-filter-btn.active {
+            background: var(--neon-cyan);
+            color: black;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
+        }
+
+        .project-overlay {
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .glass-card:hover .project-overlay {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="relative">
+
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="loader-text-wrap">
+            <h1 class="loader-main-text" id="loader-title">
+                Wel-Come to <span class="text-cyan-400">Brockn</span>Code
+            </h1>
+            <p class="loader-sub-text" id="loader-subtitle">develop and design with us</p>
+        </div>
+        <div class="loader-bar-bg">
+            <div class="loader-bar-fill" id="loader-progress"></div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 top-0 left-0 transition-all duration-300 opacity-0" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center glass-panel rounded-b-2xl mx-4 mt-2 border-t-0">
+            <a href="#" class="text-2xl font-bold tracking-tighter">
+                <span class="text-white">Brockn</span><span class="text-cyan-400">Code</span>
+            </a>
+            <div class="hidden md:flex space-x-8 text-sm uppercase tracking-widest text-gray-300">
+                <a href="#about" class="hover:text-cyan-400 transition-colors">About</a>
+                <a href="#team" class="hover:text-cyan-400 transition-colors">Team</a>
+                <a href="#projects" class="hover:text-cyan-400 transition-colors">Projects</a>
+                <a href="#contact" class="hover:text-cyan-400 transition-colors">Contact</a>
+            </div>
+            <a href="#contact" class="hidden md:block px-6 py-2 border border-cyan-500/50 text-cyan-400 rounded-full hover:bg-cyan-500/10 transition-all text-sm font-semibold">
+                Hire Us
+            </a>
+            <button class="md:hidden text-white text-2xl" id="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 bg-black/95 z-[60] hidden flex flex-col justify-center items-center space-y-8 text-2xl font-bold">
+        <button id="close-menu" class="absolute top-8 right-8 text-gray-400 hover:text-white"><i class="fas fa-times"></i></button>
+        <a href="#about" class="text-white hover:text-cyan-400 mobile-link">About</a>
+        <a href="#team" class="text-white hover:text-cyan-400 mobile-link">Team</a>
+        <a href="#projects" class="text-white hover:text-cyan-400 mobile-link">Projects</a>
+        <a href="#contact" class="text-white hover:text-cyan-400 mobile-link">Contact</a>
+    </div>
+
+    <!-- Hero Section -->
+    <header id="hero" class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+        <canvas id="hero-canvas" class="absolute inset-0 z-0 pointer-events-none"></canvas>
+        <div class="absolute inset-0 bg-grid z-0 pointer-events-none opacity-30"></div>
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-[100px] animate-pulse"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-[100px] animate-pulse" style="animation-delay: 1s;"></div>
+
+        <div class="relative z-10 text-center px-4 max-w-5xl mx-auto">
+            <div class="inline-block mb-4 px-4 py-1 rounded-full border border-gray-700 bg-gray-900/50 backdrop-blur-sm text-xs uppercase tracking-[0.2em] text-cyan-300 hero-badge opacity-0 translate-y-10">
+                Future Ready Development
+            </div>
+            <h1 class="text-6xl md:text-8xl font-bold mb-6 leading-tight hero-title opacity-0 translate-y-10">
+                Building the <br/>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 text-glow-cyan">Impossible</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10 hero-text opacity-0 translate-y-10">
+                We are <span class="text-white font-semibold">Brockn Code</span>. A collective of passionate developers and designers crafting digital experiences that defy expectations.
+            </p>
+            <div class="flex flex-col md:flex-row gap-4 justify-center items-center hero-btns opacity-0 translate-y-10">
+                <a href="#projects" class="px-8 py-4 bg-cyan-500 text-black font-bold rounded-full hover:bg-cyan-400 transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(6,182,212,0.5)]">
+                    View Our Work
+                </a>
+                <a href="#team" class="px-8 py-4 border border-white/20 hover:border-white/50 bg-white/5 backdrop-blur-sm rounded-full text-white font-semibold transition-all hover:bg-white/10">
+                    Meet The Team
+                </a>
+            </div>
+        </div>
+
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center opacity-0 hero-scroll">
+            <span class="text-xs uppercase tracking-widest mb-2 text-gray-500">Scroll</span>
+            <i class="fas fa-chevron-down text-cyan-400 animate-bounce"></i>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+            <div class="about-content">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">
+                    Who is <span class="text-cyan-400">Brockn Code</span>?
+                </h2>
+                <p class="text-gray-400 text-lg mb-6 leading-relaxed">
+                    We aren't just developers; we are digital architects. Born from the idea that "broken" code is just a stepping stone to perfection, we embrace challenges to build robust, scalable, and visually stunning applications.
+                </p>
+                <div class="grid grid-cols-2 gap-6 mt-8">
+                    <div class="glass-panel p-6 rounded-xl border-l-4 border-cyan-500">
+                        <i class="fas fa-rocket text-3xl text-cyan-400 mb-3"></i>
+                        <h3 class="text-xl font-bold mb-1">Innovation</h3>
+                        <p class="text-sm text-gray-500">Pushing boundaries with modern tech stacks.</p>
+                    </div>
+                    <div class="glass-panel p-6 rounded-xl border-l-4 border-purple-500">
+                        <i class="fas fa-layer-group text-3xl text-purple-400 mb-3"></i>
+                        <h3 class="text-xl font-bold mb-1">Scalability</h3>
+                        <p class="text-sm text-gray-500">Built to grow with your vision.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="relative about-image">
+                <div class="absolute inset-0 bg-gradient-to-tr from-cyan-500/20 to-purple-500/20 rounded-2xl blur-xl"></div>
+                <div class="glass-card p-2 rounded-2xl relative z-10 transform rotate-3 hover:rotate-0 transition-transform duration-500">
+                    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Team collaborating" class="rounded-xl w-full h-auto">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section id="team" class="py-24 bg-black/40 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">The <span class="text-purple-400">Squad</span></h2>
+                <p class="text-gray-400 max-w-xl mx-auto">Meet the minds behind the code. Each specialist brings a unique flavor to our development process.</p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8" id="team-grid">
+                <!-- Team cards populated via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-24 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+                <div>
+                    <h2 class="text-4xl md:text-5xl font-bold mb-4">Latest <span class="text-cyan-400">Creations</span></h2>
+                    <p class="text-gray-400 max-w-md">Our portfolio is a testament to our versatility and commitment to quality across multiple industries.</p>
+                </div>
+                <div class="flex flex-wrap gap-2" id="project-filters">
+                    <button class="project-filter-btn px-5 py-2 rounded-full border border-gray-700 text-sm font-semibold transition-all hover:border-cyan-500 active" data-filter="all">All</button>
+                    <button class="project-filter-btn px-5 py-2 rounded-full border border-gray-700 text-sm font-semibold transition-all hover:border-cyan-500" data-filter="web">Web Apps</button>
+                    <button class="project-filter-btn px-5 py-2 rounded-full border border-gray-700 text-sm font-semibold transition-all hover:border-cyan-500" data-filter="mobile">Mobile</button>
+                    <button class="project-filter-btn px-5 py-2 rounded-full border border-gray-700 text-sm font-semibold transition-all hover:border-cyan-500" data-filter="uiux">UI/UX</button>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="projects-grid">
+                <!-- Projects will be injected here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 bg-gradient-to-t from-black to-gray-900 relative">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <h2 class="text-4xl md:text-5xl font-bold mb-6">Let's Build The <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">Future</span></h2>
+            <form class="glass-panel p-8 rounded-2xl text-left max-w-2xl mx-auto" id="contact-form">
+                <div class="grid md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="block text-gray-400 text-sm mb-2">Name</label>
+                        <input type="text" required class="w-full bg-black/50 border border-gray-700 rounded-lg p-3 text-white focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500 transition-all" placeholder="John Doe">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 text-sm mb-2">Email</label>
+                        <input type="email" required class="w-full bg-black/50 border border-gray-700 rounded-lg p-3 text-white focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500 transition-all" placeholder="john@example.com">
+                    </div>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-400 text-sm mb-2">Message</label>
+                    <textarea required class="w-full bg-black/50 border border-gray-700 rounded-lg p-3 text-white focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500 transition-all h-32" placeholder="Tell us about your project..."></textarea>
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-4 rounded-lg transition-all transform hover:-translate-y-1 shadow-lg shadow-cyan-900/50">
+                    Send Message
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 border-t border-gray-800 bg-black">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="text-2xl font-bold">
+                <span class="text-white">Brockn</span><span class="text-cyan-400">Code</span>
+            </div>
+            <p class="text-gray-500 text-sm">© 2024 Brockn Code. All rights reserved.</p>
+            <div class="flex space-x-6 text-xl">
+                <a href="#" class="text-gray-400 hover:text-cyan-400 transition-colors"><i class="fab fa-github"></i></a>
+                <a href="#" class="text-gray-400 hover:text-cyan-400 transition-colors"><i class="fab fa-linkedin"></i></a>
+                <a href="#" class="text-gray-400 hover:text-cyan-400 transition-colors"><i class="fab fa-twitter"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Team Modal -->
+    <div id="team-modal" class="fixed inset-0 z-[100] flex items-center justify-center modal bg-black/80 backdrop-blur-md p-4">
+        <div class="bg-gray-900 border border-gray-700 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto modal-content relative">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white z-10 bg-black/50 rounded-full w-8 h-8 flex items-center justify-center">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="flex flex-col md:flex-row">
+                <div class="md:w-1/3 bg-gray-800/50 p-8 flex flex-col items-center text-center border-r border-gray-700/50">
+                    <img id="modal-img" src="" alt="Profile" class="w-32 h-32 rounded-full border-4 border-gray-800 shadow-xl mb-4 bg-gray-700">
+                    <h2 id="modal-name" class="text-2xl font-bold text-white mb-1">Name</h2>
+                    <p id="modal-role" class="text-cyan-400 text-sm uppercase tracking-widest font-semibold mb-6">Role</p>
+                    
+                    <div class="flex space-x-4 mb-6" id="modal-socials">
+                        <!-- JS injects links -->
+                    </div>
+                </div>
+                <div class="md:w-2/3 p-8">
+                    <h3 class="text-xl font-bold text-white mb-4 border-b border-gray-800 pb-2">About</h3>
+                    <p id="modal-bio" class="text-gray-300 leading-relaxed mb-6">Bio...</p>
+                    
+                    <div class="grid md:grid-cols-2 gap-6 mb-8">
+                        <div>
+                            <h3 class="text-sm font-bold text-gray-500 uppercase tracking-widest mb-2">Direct Contact</h3>
+                            <div class="space-y-2">
+                                <p class="text-white text-sm flex items-center gap-2">
+                                    <i class="fas fa-envelope text-cyan-400"></i>
+                                    <span id="modal-email">email@example.com</span>
+                                </p>
+                                <p class="text-white text-sm flex items-center gap-2">
+                                    <i class="fas fa-phone text-cyan-400"></i>
+                                    <span id="modal-phone">+91 00000 00000</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-bold text-gray-500 uppercase tracking-widest mb-2">Technical Skills</h3>
+                            <div id="modal-skills" class="flex flex-wrap gap-2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script>
+        // 1. Data Definitions
+        const teamData = {
+            rohan: {
+                name: "Rohan Jadhav",
+                role: "Full-Stack Lead",
+                image: "rohan.jpg",
+                bio: "Rohan is a seasoned developer with a passion for scalable architecture. He leads the technical direction of Brockn Code, bridging the gap between backend logic and frontend experiences.",
+                skills: ["React", "Node.js", "AWS", "MongoDB", "TypeScript"],
+                color: "text-cyan-400",
+                gradient: "from-cyan-500 to-blue-500",
+                border: "border-cyan-500/30",
+                github: "https://github.com/yoogrammer",
+                linkedin: "https://www.linkedin.com/in/rohan-jadhav-3546772a8",
+                instagram: "https://www.instagram.com/rohanjadha.v",
+                email: "rohanjadhav2327@gmail.com",
+                phone: "+91 93703 62327"
+            },
+            yash: {
+                name: "Yash Deshpande",
+                role: "Frontend Wizard",
+                image: "yash.jpg",
+                bio: "Yash breathes life into static designs. Specializing in animations and micro-interactions, he ensures every pixel is perfectly placed. Expert in GSAP and Three.js.",
+                skills: ["Vue.js", "Tailwind CSS", "GSAP", "Three.js", "Figma"],
+                color: "text-purple-400",
+                gradient: "from-purple-500 to-pink-500",
+                border: "border-purple-500/30",
+                github: "https://github.com/YASHYA111",
+                linkedin: "https://www.linkedin.com/in/yash-deshpande-350b18321/",
+                instagram: "",
+                email: "ydeshpande2842005@gmail.com",
+                phone: "+91 78219 00223"
+            },
+            rushi: {
+                name: "Rushi Patil",
+                role: "Backend Architect",
+                image: "rushi.jpg",
+                bio: "Rushi is the backbone of our operations. He designs secure APIs, manages databases, and ensures 99.9% uptime for all our deployed services.",
+                skills: ["Python", "Django", "PostgreSQL", "Docker", "DevOps"],
+                color: "text-green-400",
+                gradient: "from-green-500 to-emerald-500",
+                border: "border-green-500/30",
+                github: "https://github.com/rushipatil9623",
+                linkedin: "https://www.linkedin.com/in/rushi-patil-931999379",
+                instagram: "https://www.instagram.com/patil_rushi_9623",
+                email: "sp481565@gmail.com",
+                phone: "+91 8788604826"
+            },
+            aditya: {
+                name: "Aditya Bhandari",
+                role: "UI/UX & Creative Dev",
+                image: "aditya.jpg",
+                bio: "Aditya sees code as art. With a strong background in design theory, he crafts interfaces that are as intuitive as they are beautiful.",
+                skills: ["UI/UX Design", "Figma", "SASS", "React", "Prototyping"],
+                color: "text-pink-400",
+                gradient: "from-pink-500 to-red-500",
+                border: "border-pink-500/30",
+                github: "https://github.com/adii3404",
+                linkedin: "www.linkedin.com/in/bhandariaditya04",
+                instagram: "https://www.instagram.com/adityabhandari_04",
+                email: "aditya.builds2025@gmail.com",
+                phone: "+91 94215 51110"
+            }
+        };
+
+        const projectData = [
+            {
+                id: 1,
+                title: "Nebula Dashboard",
+                category: "web",
+                image: "https://images.unsplash.com/photo-1551288049-bbbda536339a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                desc: "Real-time analytics platform for enterprise SaaS tracking.",
+                tags: ["React", "D3.js", "Firebase"]
+            },
+            {
+                id: 2,
+                title: "Ether Wallet",
+                category: "mobile",
+                image: "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                desc: "Secure cryptocurrency management with biometric auth.",
+                tags: ["React Native", "Web3", "Node.js"]
+            },
+            {
+                id: 3,
+                title: "Nova Social",
+                category: "uiux",
+                image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                desc: "A futuristic social concept focused on user privacy.",
+                tags: ["Figma", "Branding", "UI Kit"]
+            }
+        ];
+
+        // 2. Rendering Logic
+        function renderTeam() {
+            const grid = document.getElementById('team-grid');
+            Object.keys(teamData).forEach(key => {
+                const member = teamData[key];
+                const card = `
+                    <div class="group perspective">
+                        <div class="glass-card p-6 rounded-2xl relative h-full hover:bg-gray-800/80 border-t ${member.border}">
+                            <div onclick="openModal('${key}')" class="cursor-pointer">
+                                <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 w-24 h-24 rounded-full p-1 bg-gradient-to-r ${member.gradient} shadow-lg overflow-hidden">
+                                    <img src="${member.image}" alt="${member.name}" class="w-full h-full object-cover bg-gray-900 rounded-full">
+                                </div>
+                                <div class="mt-16 text-center">
+                                    <h3 class="text-xl font-bold text-white">${member.name}</h3>
+                                    <p class="${member.color} text-sm font-medium uppercase tracking-wider mb-3">${member.role}</p>
+                                    <p class="text-gray-400 text-sm mb-4 line-clamp-2">${member.bio}</p>
+                                </div>
+                            </div>
+                            <div class="flex justify-center space-x-4 text-gray-500 border-t border-gray-800 pt-4">
+                                <a href="${member.github}" target="_blank" class="hover:text-white transition-colors"><i class="fab fa-github"></i></a>
+                                <a href="${member.linkedin}" target="_blank" class="hover:text-cyan-400 transition-colors"><i class="fab fa-linkedin"></i></a>
+                                <a href="${member.instagram}" target="_blank" class="hover:text-pink-500 transition-colors"><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                grid.insertAdjacentHTML('beforeend', card);
+            });
+        }
+
+        function renderProjects(filter = 'all') {
+            const grid = document.getElementById('projects-grid');
+            grid.innerHTML = '';
+            const filtered = filter === 'all' ? projectData : projectData.filter(p => p.category === filter);
+            filtered.forEach((p) => {
+                const card = `
+                    <div class="project-card opacity-0 translate-y-10 glass-card rounded-2xl overflow-hidden group">
+                        <div class="relative h-64 overflow-hidden">
+                            <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="project-overlay absolute inset-0 flex items-center justify-center">
+                                <a href="#contact" class="px-6 py-2 bg-white text-black font-bold rounded-full transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">View Details</a>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">${p.title}</h3>
+                            <p class="text-gray-400 text-sm mb-4">${p.desc}</p>
+                            <div class="flex flex-wrap gap-2">
+                                ${p.tags.map(tag => `<span class="text-[10px] border border-gray-700 text-gray-400 px-2 py-1 rounded-md">#${tag}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                grid.insertAdjacentHTML('beforeend', card);
+            });
+            gsap.to(".project-card", { opacity: 1, y: 0, stagger: 0.1, duration: 0.6, ease: "power2.out" });
+        }
+
+        // 3. UI Functionality
+        function openModal(memberKey) {
+            const member = teamData[memberKey];
+            if(!member) return;
+
+            document.getElementById('modal-name').textContent = member.name;
+            document.getElementById('modal-role').textContent = member.role;
+            document.getElementById('modal-bio').textContent = member.bio;
+            document.getElementById('modal-img').src = member.image;
+            document.getElementById('modal-email').textContent = member.email;
+            document.getElementById('modal-phone').textContent = member.phone;
+            document.getElementById('modal-role').className = `text-sm uppercase tracking-widest font-semibold mb-6 ${member.color}`;
+
+            const socialContainer = document.getElementById('modal-socials');
+            socialContainer.innerHTML = `
+                <a href="${member.github}" target="_blank" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-700 transition-all"><i class="fab fa-github"></i></a>
+                <a href="${member.linkedin}" target="_blank" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:text-cyan-400 hover:bg-gray-700 transition-all"><i class="fab fa-linkedin"></i></a>
+                <a href="${member.instagram}" target="_blank" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:text-pink-500 hover:bg-gray-700 transition-all"><i class="fab fa-instagram"></i></a>
+            `;
+
+            const skillsContainer = document.getElementById('modal-skills');
+            skillsContainer.innerHTML = '';
+            member.skills.forEach(skill => {
+                const span = document.createElement('span');
+                span.className = "px-3 py-1 bg-gray-800 text-gray-300 text-xs rounded-full border border-gray-700";
+                span.textContent = skill;
+                skillsContainer.appendChild(span);
+            });
+
+            document.getElementById('team-modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('team-modal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // 4. Background Canvas Effect
+        const canvas = document.getElementById('hero-canvas');
+        let ctx, particles = [], width, height;
+
+        function resize() {
+            if (!canvas) return;
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.4;
+                this.vy = (Math.random() - 0.5) * 0.4;
+                this.size = Math.random() * 1.5;
+                this.color = Math.random() > 0.5 ? '#00f3ff' : '#bc13fe';
+            }
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+            draw() {
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color; ctx.globalAlpha = 0.4; ctx.fill();
+            }
+        }
+
+        function initCanvas() {
+            if (!canvas) return;
+            ctx = canvas.getContext('2d');
+            resize();
+            particles = Array.from({ length: 60 }, () => new Particle());
+            animateCanvas();
+        }
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            for(let i = 0; i < particles.length; i++) {
+                for(let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    if(dist < 120) {
+                        ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 - dist/1200})`;
+                        ctx.lineWidth = 0.5; ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animateCanvas);
+        }
+
+        // 5. Main Execution Loop
+        window.addEventListener('load', () => {
+            gsap.registerPlugin(ScrollTrigger);
+            renderTeam();
+            renderProjects();
+            initCanvas();
+
+            // Preloader Animation Timeline
+            const tl = gsap.timeline();
+
+            tl.to("#loader-title", {
+                duration: 1,
+                opacity: 1,
+                y: 0,
+                ease: "power4.out"
+            })
+            .to("#loader-subtitle", {
+                duration: 0.8,
+                opacity: 1,
+                letterSpacing: "0.2em",
+                ease: "power2.out"
+            }, "-=0.4")
+            .to("#loader-progress", {
+                width: "100%",
+                duration: 2,
+                ease: "power2.inOut"
+            }, "-=0.5")
+            .to("#preloader", {
+                y: "-100%",
+                duration: 1,
+                ease: "expo.inOut",
+                onComplete: () => {
+                    document.body.style.overflow = "auto";
+                    document.getElementById('preloader').style.display = 'none';
+                }
+            })
+            .to("#navbar", {
+                opacity: 1,
+                y: 0,
+                duration: 0.8
+            }, "-=0.4")
+            .to(".hero-badge", { opacity: 1, y: 0, duration: 0.6 }, "-=0.4")
+            .to(".hero-title", { opacity: 1, y: 0, duration: 0.6 }, "-=0.4")
+            .to(".hero-text", { opacity: 1, y: 0, duration: 0.6 }, "-=0.4")
+            .to(".hero-btns", { opacity: 1, y: 0, duration: 0.6 }, "-=0.4")
+            .to(".hero-scroll", { opacity: 1, duration: 0.6 }, "-=0.2");
+
+            // Navbar behavior
+            window.addEventListener('scroll', () => {
+                const nav = document.querySelector("#navbar div");
+                if (window.scrollY > 50) {
+                    nav.classList.add("bg-black/95", "backdrop-blur-xl", "py-2");
+                    nav.classList.remove("glass-panel", "mt-2");
+                } else {
+                    nav.classList.remove("bg-black/95", "backdrop-blur-xl", "py-2");
+                    nav.classList.add("glass-panel", "mt-2");
+                }
+            });
+
+            // 3D Tilt Effect
+            document.addEventListener('mousemove', (e) => {
+                const cards = document.querySelectorAll('.perspective');
+                cards.forEach(card => {
+                    const rect = card.getBoundingClientRect();
+                    if (e.clientX > rect.left && e.clientX < rect.right && e.clientY > rect.top && e.clientY < rect.bottom) {
+                        const x = ((e.clientX - rect.left) / rect.width - 0.5) * 20;
+                        const y = ((e.clientY - rect.top) / rect.height - 0.5) * -20;
+                        card.querySelector('.glass-card').style.transform = `rotateX(${y}deg) rotateY(${x}deg) scale(1.05)`;
+                    } else {
+                        card.querySelector('.glass-card').style.transform = `rotateX(0deg) rotateY(0deg) scale(1)`;
+                    }
+                });
+            });
+
+            // Mobile menu
+            document.getElementById('mobile-menu-btn').onclick = () => document.getElementById('mobile-menu').classList.remove('hidden');
+            document.getElementById('close-menu').onclick = () => document.getElementById('mobile-menu').classList.add('hidden');
+            document.querySelectorAll('.mobile-link').forEach(l => l.onclick = () => document.getElementById('mobile-menu').classList.add('hidden'));
+
+            // Contact Form
+            document.getElementById('contact-form').onsubmit = (e) => {
+                e.preventDefault();
+                const btn = e.target.querySelector('button');
+                btn.innerHTML = 'Sending...';
+                setTimeout(() => {
+                    btn.innerHTML = 'Message Sent!';
+                    btn.classList.replace('from-cyan-600', 'from-green-600');
+                    e.target.reset();
+                }, 1000);
+            };
+        });
+
+        window.onresize = resize;
+    </script>
+</body>
+</html>
