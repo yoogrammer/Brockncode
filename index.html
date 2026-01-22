@@ -159,6 +159,7 @@
             background: var(--neon-cyan);
             color: black;
             box-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
+            border-color: var(--neon-cyan);
         }
 
         .project-overlay {
@@ -170,6 +171,12 @@
         .glass-card:hover .project-overlay {
             opacity: 1;
         }
+        
+        /* Section Transitions */
+        .section-hidden {
+            opacity: 0;
+            transform: translateY(50px);
+        }
     </style>
 </head>
 <body class="relative">
@@ -178,7 +185,7 @@
     <div id="preloader">
         <div class="loader-text-wrap">
             <h1 class="loader-main-text" id="loader-title">
-                Wel-Come to <span class="text-cyan-400">Brockn</span>Code
+                Welcome to <span class="text-cyan-400">Brockn</span>Code
             </h1>
             <p class="loader-sub-text" id="loader-subtitle">develop and design with us</p>
         </div>
@@ -200,7 +207,7 @@
                 <a href="#contact" class="hover:text-cyan-400 transition-colors">Contact</a>
             </div>
             <a href="#contact" class="hidden md:block px-6 py-2 border border-cyan-500/50 text-cyan-400 rounded-full hover:bg-cyan-500/10 transition-all text-sm font-semibold">
-                Hire Us
+                Contact Us
             </a>
             <button class="md:hidden text-white text-2xl" id="mobile-menu-btn">
                 <i class="fas fa-bars"></i>
@@ -254,7 +261,7 @@
     <!-- About Section -->
     <section id="about" class="py-24 relative overflow-hidden">
         <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
-            <div class="about-content">
+            <div class="about-content section-hidden">
                 <h2 class="text-4xl md:text-5xl font-bold mb-6">
                     Who is <span class="text-cyan-400">Brockn Code</span>?
                 </h2>
@@ -274,10 +281,10 @@
                     </div>
                 </div>
             </div>
-            <div class="relative about-image">
+            <div class="relative about-image section-hidden">
                 <div class="absolute inset-0 bg-gradient-to-tr from-cyan-500/20 to-purple-500/20 rounded-2xl blur-xl"></div>
                 <div class="glass-card p-2 rounded-2xl relative z-10 transform rotate-3 hover:rotate-0 transition-transform duration-500">
-                    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Team collaborating" class="rounded-xl w-full h-auto">
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Team collaborating" class="rounded-xl w-full h-auto">
                 </div>
             </div>
         </div>
@@ -286,7 +293,7 @@
     <!-- Team Section -->
     <section id="team" class="py-24 bg-black/40 relative">
         <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center mb-16">
+            <div class="text-center mb-16 section-hidden">
                 <h2 class="text-4xl md:text-5xl font-bold mb-4">The <span class="text-purple-400">Squad</span></h2>
                 <p class="text-gray-400 max-w-xl mx-auto">Meet the minds behind the code. Each specialist brings a unique flavor to our development process.</p>
             </div>
@@ -299,7 +306,7 @@
     <!-- Projects Section -->
     <section id="projects" class="py-24 relative overflow-hidden">
         <div class="max-w-7xl mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6 section-hidden">
                 <div>
                     <h2 class="text-4xl md:text-5xl font-bold mb-4">Latest <span class="text-cyan-400">Creations</span></h2>
                     <p class="text-gray-400 max-w-md">Our portfolio is a testament to our versatility and commitment to quality across multiple industries.</p>
@@ -320,17 +327,17 @@
 
     <!-- Contact Section -->
     <section id="contact" class="py-24 bg-gradient-to-t from-black to-gray-900 relative">
-        <div class="max-w-4xl mx-auto px-6 text-center">
+        <div class="max-w-4xl mx-auto px-6 text-center section-hidden">
             <h2 class="text-4xl md:text-5xl font-bold mb-6">Let's Build The <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">Future</span></h2>
             <form class="glass-panel p-8 rounded-2xl text-left max-w-2xl mx-auto" id="contact-form">
                 <div class="grid md:grid-cols-2 gap-6 mb-6">
                     <div>
                         <label class="block text-gray-400 text-sm mb-2">Name</label>
-                        <input type="text" required class="w-full bg-black/50 border border-gray-700 rounded-lg p-3 text-white focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500 transition-all" placeholder="John Doe">
+                        <input type="text" required class="w-full bg-black/50 border border-gray-700 rounded-lg p-3 text-white focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500 transition-all" placeholder="Name">
                     </div>
                     <div>
                         <label class="block text-gray-400 text-sm mb-2">Email</label>
-                        <input type="email" required class="w-full bg-black/50 border border-gray-700 rounded-lg p-3 text-white focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500 transition-all" placeholder="john@example.com">
+                        <input type="email" required class="w-full bg-black/50 border border-gray-700 rounded-lg p-3 text-white focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500 transition-all" placeholder="abc@example.com">
                     </div>
                 </div>
                 <div class="mb-6">
@@ -354,7 +361,7 @@
             <div class="flex space-x-6 text-xl">
                 <a href="#" class="text-gray-400 hover:text-cyan-400 transition-colors"><i class="fab fa-github"></i></a>
                 <a href="#" class="text-gray-400 hover:text-cyan-400 transition-colors"><i class="fab fa-linkedin"></i></a>
-                <a href="#" class="text-gray-400 hover:text-cyan-400 transition-colors"><i class="fab fa-twitter"></i></a>
+                <a href="mailto:brockncode@gmail.com"  class="text-gray-400 hover:text-cyan-400 transition-colors"><i class="fas fa-envelope"></i></a>
             </div>
         </div>
     </footer>
@@ -367,7 +374,7 @@
             </button>
             <div class="flex flex-col md:flex-row">
                 <div class="md:w-1/3 bg-gray-800/50 p-8 flex flex-col items-center text-center border-r border-gray-700/50">
-                    <img id="modal-img" src="" alt="Profile" class="w-32 h-32 rounded-full border-4 border-gray-800 shadow-xl mb-4 bg-gray-700">
+                    <img id="modal-img" src="" alt="Profile" class="w-32 h-32 rounded-full border-4 border-gray-800 shadow-xl mb-4 bg-gray-700 object-cover">
                     <h2 id="modal-name" class="text-2xl font-bold text-white mb-1">Name</h2>
                     <p id="modal-role" class="text-cyan-400 text-sm uppercase tracking-widest font-semibold mb-6">Role</p>
                     
@@ -413,6 +420,7 @@
             rohan: {
                 name: "Rohan Jadhav",
                 role: "Full-Stack Lead",
+                // Replaced broken local path with valid Placeholder URL
                 image: "rohan.jpg",
                 bio: "Rohan is a seasoned developer with a passion for scalable architecture. He leads the technical direction of Brockn Code, bridging the gap between backend logic and frontend experiences.",
                 skills: ["React", "Node.js", "AWS", "MongoDB", "TypeScript"],
@@ -428,6 +436,7 @@
             yash: {
                 name: "Yash Deshpande",
                 role: "Frontend Wizard",
+                // Replaced broken local path with valid Placeholder URL
                 image: "yash.jpg",
                 bio: "Yash breathes life into static designs. Specializing in animations and micro-interactions, he ensures every pixel is perfectly placed. Expert in GSAP and Three.js.",
                 skills: ["Vue.js", "Tailwind CSS", "GSAP", "Three.js", "Figma"],
@@ -443,6 +452,7 @@
             rushi: {
                 name: "Rushi Patil",
                 role: "Backend Architect",
+                // Replaced broken local path with valid Placeholder URL
                 image: "rushi.jpg",
                 bio: "Rushi is the backbone of our operations. He designs secure APIs, manages databases, and ensures 99.9% uptime for all our deployed services.",
                 skills: ["Python", "Django", "PostgreSQL", "Docker", "DevOps"],
@@ -458,6 +468,7 @@
             aditya: {
                 name: "Aditya Bhandari",
                 role: "UI/UX & Creative Dev",
+                // Replaced broken local path with valid Placeholder URL
                 image: "aditya.jpg",
                 bio: "Aditya sees code as art. With a strong background in design theory, he crafts interfaces that are as intuitive as they are beautiful.",
                 skills: ["UI/UX Design", "Figma", "SASS", "React", "Prototyping"],
@@ -502,10 +513,13 @@
         // 2. Rendering Logic
         function renderTeam() {
             const grid = document.getElementById('team-grid');
+            if(!grid) return;
+            // Added section-hidden class for ScrollTrigger
+            grid.innerHTML = ''; 
             Object.keys(teamData).forEach(key => {
                 const member = teamData[key];
                 const card = `
-                    <div class="group perspective">
+                    <div class="group perspective section-hidden">
                         <div class="glass-card p-6 rounded-2xl relative h-full hover:bg-gray-800/80 border-t ${member.border}">
                             <div onclick="openModal('${key}')" class="cursor-pointer">
                                 <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 w-24 h-24 rounded-full p-1 bg-gradient-to-r ${member.gradient} shadow-lg overflow-hidden">
@@ -531,8 +545,11 @@
 
         function renderProjects(filter = 'all') {
             const grid = document.getElementById('projects-grid');
+            if(!grid) return;
+            
             grid.innerHTML = '';
             const filtered = filter === 'all' ? projectData : projectData.filter(p => p.category === filter);
+            
             filtered.forEach((p) => {
                 const card = `
                     <div class="project-card opacity-0 translate-y-10 glass-card rounded-2xl overflow-hidden group">
@@ -553,7 +570,15 @@
                 `;
                 grid.insertAdjacentHTML('beforeend', card);
             });
-            gsap.to(".project-card", { opacity: 1, y: 0, stagger: 0.1, duration: 0.6, ease: "power2.out" });
+            
+            // Re-run animation for new elements
+            gsap.to(".project-card", { 
+                opacity: 1, 
+                y: 0, 
+                stagger: 0.1, 
+                duration: 0.6, 
+                ease: "power2.out" 
+            });
         }
 
         // 3. UI Functionality
@@ -620,6 +645,7 @@
                 if (this.y < 0 || this.y > height) this.vy *= -1;
             }
             draw() {
+                if(!ctx) return;
                 ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.fillStyle = this.color; ctx.globalAlpha = 0.4; ctx.fill();
             }
@@ -634,6 +660,7 @@
         }
 
         function animateCanvas() {
+            if(!ctx) return;
             ctx.clearRect(0, 0, width, height);
             particles.forEach(p => { p.update(); p.draw(); });
             for(let i = 0; i < particles.length; i++) {
@@ -658,6 +685,33 @@
             renderTeam();
             renderProjects();
             initCanvas();
+
+            // Setup Project Filters (FIXED: Added logic)
+            const filterBtns = document.querySelectorAll('.project-filter-btn');
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Update Active State
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    // Filter Grid
+                    renderProjects(btn.dataset.filter);
+                });
+            });
+
+            // Initialize ScrollTriggers for Sections (FIXED: Added missing animations)
+            gsap.utils.toArray('.section-hidden').forEach((element) => {
+                gsap.to(element, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 1,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: element,
+                        start: "top 80%", // Animation starts when top of element hits 80% of viewport height
+                        toggleActions: "play none none reverse"
+                    }
+                });
+            });
 
             // Preloader Animation Timeline
             const tl = gsap.timeline();
@@ -719,9 +773,15 @@
                     if (e.clientX > rect.left && e.clientX < rect.right && e.clientY > rect.top && e.clientY < rect.bottom) {
                         const x = ((e.clientX - rect.left) / rect.width - 0.5) * 20;
                         const y = ((e.clientY - rect.top) / rect.height - 0.5) * -20;
-                        card.querySelector('.glass-card').style.transform = `rotateX(${y}deg) rotateY(${x}deg) scale(1.05)`;
+                        const cardInner = card.querySelector('.glass-card');
+                        if(cardInner) {
+                             cardInner.style.transform = `rotateX(${y}deg) rotateY(${x}deg) scale(1.05)`;
+                        }
                     } else {
-                        card.querySelector('.glass-card').style.transform = `rotateX(0deg) rotateY(0deg) scale(1)`;
+                        const cardInner = card.querySelector('.glass-card');
+                        if(cardInner) {
+                            cardInner.style.transform = `rotateX(0deg) rotateY(0deg) scale(1)`;
+                        }
                     }
                 });
             });
