@@ -18,6 +18,8 @@
             --neon-purple: #bc13fe;
             --neon-green: #0aff0a;
             --neon-red: #ff0055;
+            --neon-gold: #ffd700;
+            --neon-bronze: #cd7f32;
             --dark-bg: #050505;
         }
 
@@ -105,6 +107,14 @@
         
         .text-glow-red {
             text-shadow: 0 0 10px rgba(255, 0, 85, 0.7), 0 0 20px rgba(255, 0, 85, 0.5);
+        }
+
+        .text-glow-gold {
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.7), 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+        
+        .text-glow-bronze {
+            text-shadow: 0 0 10px rgba(205, 127, 50, 0.7), 0 0 20px rgba(205, 127, 50, 0.5);
         }
 
         .box-glow:hover {
@@ -243,6 +253,36 @@
             0% { transform: scale(0.9); opacity: 1; }
             100% { transform: scale(1.5); opacity: 0; }
         }
+
+        /* Achievement Floating Cube Animation */
+        .cube-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        .shine-effect {
+            position: relative;
+            overflow: hidden;
+        }
+        .shine-effect::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
+            transform: skewX(-25deg);
+            animation: shine 3s infinite;
+        }
+        @keyframes shine {
+            0% { left: -100%; }
+            20% { left: 200%; }
+            100% { left: 200%; }
+        }
     </style>
 </head>
 <body class="relative">
@@ -268,10 +308,11 @@
             </a>
             <div class="hidden md:flex space-x-8 text-sm uppercase tracking-widest text-gray-300 items-center">
                 <a href="#about" class="hover:text-cyan-400 transition-colors">About</a>
+                <!-- Awards link removed as requested -->
                 <a href="#team" class="hover:text-cyan-400 transition-colors">Team</a>
                 <a href="#projects" class="hover:text-cyan-400 transition-colors">Projects</a>
                 
-                <!-- New Live Event Link -->
+                <!-- Live Event Link -->
                 <a href="#hackathon-promo" class="flex items-center gap-2 text-red-400 hover:text-red-300 transition-colors font-bold">
                     <span class="relative flex h-2 w-2">
                       <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
@@ -295,6 +336,7 @@
     <div id="mobile-menu" class="fixed inset-0 bg-black/95 z-[60] hidden flex flex-col justify-center items-center space-y-8 text-2xl font-bold">
         <button id="close-menu" class="absolute top-8 right-8 text-gray-400 hover:text-white"><i class="fas fa-times"></i></button>
         <a href="#about" class="text-white hover:text-cyan-400 mobile-link">About</a>
+        <!-- Awards link removed as requested -->
         <a href="#hackathon-promo" class="text-red-400 hover:text-red-300 mobile-link">Live Hackathon</a>
         <a href="#team" class="text-white hover:text-cyan-400 mobile-link">Team</a>
         <a href="#projects" class="text-white hover:text-cyan-400 mobile-link">Projects</a>
@@ -335,7 +377,66 @@
         </div>
     </header>
 
-    <!-- HACKATHON PROMO SECTION (NEW) -->
+    <!-- ACHIEVEMENTS SECTION (Updated to 3rd Place/Bronze) -->
+    <section id="achievements" class="py-16 relative overflow-hidden bg-black/50 border-y border-gray-800/50">
+        <div class="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_rgba(205,127,50,0.1),_transparent_40%)] pointer-events-none"></div>
+        
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="glass-panel rounded-3xl p-1 relative overflow-hidden section-hidden">
+                <div class="absolute inset-0 bg-gradient-to-r from-orange-800/20 via-transparent to-transparent opacity-50"></div>
+                
+                <div class="bg-black/80 rounded-[22px] p-8 md:p-12 relative overflow-hidden">
+                    <div class="flex flex-col md:flex-row items-center gap-10 justify-between">
+                        
+                        <!-- Text Content -->
+                        <div class="flex-1 text-center md:text-left z-10">
+                            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/40 text-orange-400 text-xs font-bold uppercase tracking-widest mb-4">
+                                <i class="fas fa-trophy"></i> Achievement Unlocked
+                            </div>
+                            <h2 class="text-4xl md:text-5xl font-bold mb-4 text-white">
+                                Global <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-300 to-orange-600 text-glow-bronze">Hackathon Winners</span>
+                            </h2>
+                            <p class="text-gray-300 text-lg mb-6 leading-relaxed">
+                                Brockn Code secured <span class="text-white font-bold">3rd Place</span> in the Global Blockchain Summit Hackathon. Our team developed a revolutionary decentralized protocol, outperforming 500+ elite teams worldwide.
+                            </p>
+                            <div class="flex flex-wrap gap-4 justify-center md:justify-start">
+                                <div class="px-4 py-2 rounded-lg bg-gray-800/80 border border-gray-700 flex items-center gap-2">
+                                    <i class="fab fa-ethereum text-gray-400"></i>
+                                    <span class="text-sm font-medium text-gray-300">Blockchain</span>
+                                </div>
+                                <div class="px-4 py-2 rounded-lg bg-gray-800/80 border border-gray-700 flex items-center gap-2">
+                                    <i class="fas fa-globe-americas text-gray-400"></i>
+                                    <span class="text-sm font-medium text-gray-300">Global Stage</span>
+                                </div>
+                                <div class="px-4 py-2 rounded-lg bg-gray-800/80 border border-gray-700 flex items-center gap-2">
+                                    <i class="fas fa-medal text-orange-400"></i>
+                                    <span class="text-sm font-medium text-gray-300">Bronze Medalist</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Visual Content -->
+                        <div class="md:w-1/3 flex justify-center z-10 cube-float">
+                            <div class="relative w-64 h-64 shine-effect rounded-2xl bg-gradient-to-br from-gray-900 to-black border border-orange-500/30 flex items-center justify-center shadow-[0_0_50px_rgba(205,127,50,0.2)]">
+                                <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+                                <div class="text-center">
+                                    <i class="fas fa-trophy text-7xl text-gradient bg-clip-text text-transparent bg-gradient-to-b from-orange-300 to-orange-700 mb-4 drop-shadow-[0_0_15px_rgba(205,127,50,0.5)]"></i>
+                                    <div class="text-2xl font-bold text-white">#3 Winner</div>
+                                    <div class="text-sm text-orange-400 uppercase tracking-widest mt-1">Global 2025</div>
+                                </div>
+                                <!-- Decorative corners -->
+                                <div class="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-orange-500/50 rounded-tl-lg"></div>
+                                <div class="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-orange-500/50 rounded-br-lg"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HACKATHON PROMO SECTION (Existing) -->
     <section id="hackathon-promo" class="py-20 relative overflow-hidden bg-black border-y border-gray-800">
         <!-- Dynamic Background -->
         <div class="absolute inset-0 opacity-20">
@@ -617,25 +718,25 @@
         const projectData = [
             {
                 id: 1,
-                title: "Nebula Dashboard",
+                title: "MirrorMind",
                 category: "web",
-                image: "https://images.unsplash.com/photo-1551288049-bbbda536339a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                image: "mirror.png",
                 desc: "Real-time analytics platform for enterprise SaaS tracking.",
                 tags: ["React", "D3.js", "Firebase"]
             },
             {
                 id: 2,
-                title: "Ether Wallet",
-                category: "mobile",
-                image: "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                title: "QubicWhale-Traker BlockChain",
+                category: "",
+                image: "qubic.png",
                 desc: "Secure cryptocurrency management with biometric auth.",
                 tags: ["React Native", "Web3", "Node.js"]
             },
             {
                 id: 3,
-                title: "Nova Social",
+                title: "",
                 category: "uiux",
-                image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                image: "",
                 desc: "A futuristic social concept focused on user privacy.",
                 tags: ["Figma", "Branding", "UI Kit"]
             }
